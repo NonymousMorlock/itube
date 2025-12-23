@@ -1,10 +1,10 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
+import 'package:itube/core/constants/network_constants.dart';
 import 'package:itube/core/network/interfaces/session_observer.dart';
 import 'package:itube/core/network/interfaces/token_provider.dart';
 import 'package:itube/core/typedefs.dart';
-import 'package:itube/core/utils/network_constants.dart';
 
 class RefreshTokenInterceptor extends Interceptor {
   const RefreshTokenInterceptor({

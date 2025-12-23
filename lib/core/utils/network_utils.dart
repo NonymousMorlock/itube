@@ -1,9 +1,9 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
+import 'package:itube/core/constants/network_constants.dart';
 import 'package:itube/core/errors/exceptions.dart';
 import 'package:itube/core/typedefs.dart';
-import 'package:itube/core/utils/network_constants.dart';
 
 abstract class NetworkUtils {
   static ServerException handleDioException(
