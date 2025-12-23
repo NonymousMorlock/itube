@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:itube/core/constants/network_constants.dart';
 import 'package:itube/core/errors/exceptions.dart';
+import 'package:itube/core/extensions/dio_exception_extensions.dart';
 import 'package:itube/core/typedefs.dart';
 
 abstract class NetworkUtils {
@@ -23,8 +24,8 @@ abstract class NetworkUtils {
       return handleDioResponseError(e.response!);
     }
     return ServerException(
-      message: NetworkConstants.serverFailureMessage,
-      statusCode: e.response?.statusCode ?? 500,
+      message: e.errorMessage,
+      statusCode: e.title,
     );
   }
 
