@@ -1,10 +1,13 @@
 import 'dart:developer';
 
+import 'package:dio/browser.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:itube/core/constants/network_constants.dart';
 import 'package:itube/core/network/interfaces/session_observer.dart';
 import 'package:itube/core/network/interfaces/token_provider.dart';
 import 'package:itube/core/typedefs.dart';
+import 'package:itube/core/utils/network_utils.dart';
 
 class RefreshTokenInterceptor extends Interceptor {
   const RefreshTokenInterceptor({
@@ -24,11 +27,12 @@ class RefreshTokenInterceptor extends Interceptor {
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
-    final accessToken = await _tokenProvider.getAccessToken();
-    if (accessToken != null) {
-      options.headers['Cookie'] = 'access_token=$accessToken';
+    if (!kIsWeb && !kIsWasm) {
+      final accessToken = await _tokenProvider.getAccessToken();
+      if (accessToken != null) {
+        options.headers['Cookie'] = 'access_token=$accessToken';
+      }
     }
-
     return handler.next(options);
   }
 
@@ -37,40 +41,49 @@ class RefreshTokenInterceptor extends Interceptor {
     DioException err,
     ErrorInterceptorHandler handler,
   ) async {
-    final refreshDio = Dio(
-      BaseOptions(
-        baseUrl: _dio.options.baseUrl,
-        contentType: _dio.options.contentType,
-      ),
-    );
+    const isWeb = kIsWeb || kIsWasm;
     if (err.response?.statusCode == 401) {
-      final refreshToken = await _tokenProvider.getRefreshToken();
-      final userSub = await _tokenProvider.getUserCognitoSub();
+      Options? refreshOptions;
+      final refreshDio = Dio(
+        BaseOptions(
+          baseUrl: _dio.options.baseUrl,
+          contentType: _dio.options.contentType,
+        ),
+      );
+      if (!isWeb) {
+        final refreshToken = await _tokenProvider.getRefreshToken();
+        final userSub = await _tokenProvider.getUserCognitoSub();
 
-      if (refreshToken == null || userSub == null) {
-        _sessionObserver.invalidate();
-        return handler.reject(err);
+        if (refreshToken == null || userSub == null) {
+          _sessionObserver.invalidate();
+          return handler.reject(err);
+        }
+        refreshOptions = Options(
+          headers: {
+            'Cookie': [
+              'refresh_token=$refreshToken',
+              'user_cognito_sub=$userSub',
+            ].join('; '),
+          },
+        );
+      } else {
+        refreshDio.httpClientAdapter = BrowserHttpClientAdapter(
+          withCredentials: true,
+        );
       }
 
       try {
         final response = await refreshDio.post<DataMap>(
           NetworkConstants.refreshTokenEndpoint,
-          options: Options(
-            headers: {
-              'Cookie': [
-                'refresh_token=$refreshToken',
-                'user_cognito_sub=$userSub',
-              ].join('; '),
-            },
-          ),
+          options: refreshOptions,
         );
 
-        final setCookieHeaders = response.headers['set-cookie'];
-        if (setCookieHeaders != null) {
-          await extractAndCacheCookies(setCookieHeaders);
+        if (!isWeb) {
+          final setCookieHeaders = response.headers['set-cookie'];
+          if (setCookieHeaders != null) {
+            await extractAndCacheCookies(setCookieHeaders);
+          }
         }
-
-        final newAccessToken = await _tokenProvider.getAccessToken();
 
         final options = err.requestOptions;
         if (options.data is FormData) {
@@ -81,8 +94,9 @@ class RefreshTokenInterceptor extends Interceptor {
             formData.files.add(MapEntry(mapFile.key, mapFile.value.clone()));
           }
           options.data = formData;
-          options.headers['Cookie'] = 'access_token=$newAccessToken';
-        } else {
+        }
+        if (!isWeb) {
+          final newAccessToken = await _tokenProvider.getAccessToken();
           options.headers['Cookie'] = 'access_token=$newAccessToken';
         }
         return handler.resolve(await _dio.fetch(options));
@@ -113,23 +127,9 @@ class RefreshTokenInterceptor extends Interceptor {
   }
 
   Future<void> extractAndCacheCookies(List<String> setCookies) async {
-    String? accessToken;
-    String? refreshToken;
-
-    for (final cookie in setCookies) {
-      final parts = cookie.split(';');
-      final nameValue = parts.first;
-      final index = nameValue.indexOf('=');
-
-      if (index == -1) continue;
-
-      final name = nameValue.substring(0, index);
-      final value = nameValue.substring(index + 1);
-
-      if (name == 'access_token') accessToken = value;
-
-      if (name == 'refresh_token') refreshToken = value;
-    }
+    final (:accessToken, :refreshToken) = NetworkUtils.extractTokensFromCookies(
+      setCookies,
+    );
     if (accessToken != null || refreshToken != null) {
       await _tokenProvider.cacheToken(
         accessToken: accessToken,
