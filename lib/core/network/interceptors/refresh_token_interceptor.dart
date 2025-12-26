@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:dio/browser.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:itube/core/constants/network_constants.dart';
@@ -48,6 +47,7 @@ class RefreshTokenInterceptor extends Interceptor {
         BaseOptions(
           baseUrl: _dio.options.baseUrl,
           contentType: _dio.options.contentType,
+          extra: isWeb ? {'withCredentials': true} : {},
         ),
       );
       if (!isWeb) {
@@ -65,10 +65,6 @@ class RefreshTokenInterceptor extends Interceptor {
               'user_cognito_sub=$userSub',
             ].join('; '),
           },
-        );
-      } else {
-        refreshDio.httpClientAdapter = BrowserHttpClientAdapter(
-          withCredentials: true,
         );
       }
 
