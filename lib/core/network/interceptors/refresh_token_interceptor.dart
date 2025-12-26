@@ -104,9 +104,8 @@ class RefreshTokenInterceptor extends Interceptor {
           level: 1200,
           name: 'RefreshTokenInterceptor.DioException',
         );
-        if (e.response?.statusCode == 401 || e.response?.statusCode == 403) {
-          _sessionObserver.invalidate();
-        }
+        _sessionObserver.invalidate();
+
         return handler.reject(e);
       } on Exception catch (e, s) {
         log(
