@@ -3,13 +3,13 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:itube/app/app.dart';
-import 'package:itube/counter/counter.dart';
+import 'package:itube/src/auth/presentation/views/signup_page.dart';
 
 void main() {
   group('App', () {
-    testWidgets('renders CounterPage', (tester) async {
+    testWidgets('renders SignupPage', (tester) async {
       await tester.pumpWidget(App());
-      expect(find.byType(CounterPage), findsOneWidget);
+      expect(find.byType(SignupPage), findsOneWidget);
     });
   });
 }
