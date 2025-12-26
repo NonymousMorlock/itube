@@ -22,6 +22,7 @@ class AuthTokenProviderImpl implements TokenProvider {
   void clearProviderMemory() {
     _inMemoryAccessToken = null;
     _inMemoryRefreshToken = null;
+    _inMemoryUserCognitoSub = null;
   }
 
   @override
