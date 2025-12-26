@@ -1,5 +1,8 @@
+import 'dart:developer';
+
+import 'package:flutter/services.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:itube/core/errors/exceptions.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 abstract interface class AuthLocalDataSource {
   Future<void> cachePendingRegistrationEmail(String email);
@@ -24,7 +27,7 @@ abstract interface class AuthLocalDataSource {
 class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   AuthLocalDataSourceImpl(this._storage);
 
-  final SharedPreferences _storage;
+  final FlutterSecureStorage _storage;
 
   static const _accessTokenKey = 'ACCESS_TOKEN_KEY';
   static const _refreshTokenKey = 'REFRESH_TOKEN_KEY';
@@ -33,13 +36,35 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
 
   @override
   Future<void> cachePendingRegistrationEmail(String email) async {
-    final result = await _storage.setString(
-      _pendingRegistrationEmailKey,
-      email,
-    );
-    if (!result) {
+    try {
+      await _storage.write(
+        key: _pendingRegistrationEmailKey,
+        value: email,
+      );
+    } on PlatformException catch (e, s) {
+      log(
+        'Error: Failed to cache pending registration email',
+        name: 'AuthLocalDataSourceImpl.cachePendingRegistrationEmail',
+        error: e,
+        stackTrace: s,
+        level: 1200,
+      );
+
       throw const CacheException(
-        message: 'Failed to cache pending registration email',
+        message: 'Something went wrong',
+        statusCode: 'UNKNOWN',
+      );
+    } on Exception catch (e, s) {
+      log(
+        'Error: Failed to cache pending registration email',
+        name: 'AuthLocalDataSourceImpl.cachePendingRegistrationEmail',
+        error: e,
+        stackTrace: s,
+        level: 1200,
+      );
+
+      throw const CacheException(
+        message: 'Something went wrong',
         statusCode: 'UNKNOWN',
       );
     }
@@ -47,32 +72,73 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
 
   @override
   Future<void> cacheToken({String? accessToken, String? refreshToken}) async {
-    if (accessToken != null) {
-      final result = await _storage.setString(_accessTokenKey, accessToken);
-      if (!result) {
-        throw const CacheException(
-          message: 'Failed to cache access token',
-          statusCode: 'UNKNOWN',
-        );
+    try {
+      if (accessToken != null) {
+        await _storage.write(key: _accessTokenKey, value: accessToken);
       }
-    }
-    if (refreshToken != null) {
-      final result = await _storage.setString(_refreshTokenKey, refreshToken);
-      if (!result) {
-        throw const CacheException(
-          message: 'Failed to cache refresh token',
-          statusCode: 'UNKNOWN',
-        );
+      if (refreshToken != null) {
+        await _storage.write(key: _refreshTokenKey, value: refreshToken);
       }
+    } on PlatformException catch (e, s) {
+      log(
+        'Error: Failed to cache tokens',
+        name: 'AuthLocalDataSourceImpl.cacheToken',
+        error: e,
+        stackTrace: s,
+        level: 1200,
+      );
+
+      throw const CacheException(
+        message: 'Something went wrong',
+        statusCode: 'UNKNOWN',
+      );
+    } on Exception catch (e, s) {
+      log(
+        'Error: Failed to cache tokens',
+        name: 'AuthLocalDataSourceImpl.cacheToken',
+        error: e,
+        stackTrace: s,
+        level: 1200,
+      );
+
+      throw const CacheException(
+        message: 'Something went wrong',
+        statusCode: 'UNKNOWN',
+      );
     }
   }
 
   @override
   Future<void> cacheUserCognitoSub(String userCognitoSub) async {
-    final result = await _storage.setString(_userCognitoSubKey, userCognitoSub);
-    if (!result) {
+    try {
+      await _storage.write(
+        key: _userCognitoSubKey,
+        value: userCognitoSub,
+      );
+    } on PlatformException catch (e, s) {
+      log(
+        'Error: Failed to cache user cognito sub',
+        name: 'AuthLocalDataSourceImpl.cacheUserCognitoSub',
+        error: e,
+        stackTrace: s,
+        level: 1200,
+      );
+
       throw const CacheException(
-        message: 'Failed to cache user cognito sub',
+        message: 'Something went wrong',
+        statusCode: 'UNKNOWN',
+      );
+    } on Exception catch (e, s) {
+      log(
+        'Error: Failed to cache user cognito sub',
+        name: 'AuthLocalDataSourceImpl.cacheUserCognitoSub',
+        error: e,
+        stackTrace: s,
+        level: 1200,
+      );
+
+      throw const CacheException(
+        message: 'Something went wrong',
         statusCode: 'UNKNOWN',
       );
     }
@@ -80,33 +146,199 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
 
   @override
   Future<void> clearPendingRegistrationEmail() async {
-    await _storage.remove(_pendingRegistrationEmailKey);
+    try {
+      await _storage.delete(key: _pendingRegistrationEmailKey);
+    } on PlatformException catch (e, s) {
+      log(
+        'Error: Failed to clear pending registration email',
+        name: 'AuthLocalDataSourceImpl.clearPendingRegistrationEmail',
+        error: e,
+        stackTrace: s,
+        level: 1200,
+      );
+
+      throw const CacheException(
+        message: 'Something went wrong',
+        statusCode: 'UNKNOWN',
+      );
+    } on Exception catch (e, s) {
+      log(
+        'Error: Failed to clear pending registration email',
+        name: 'AuthLocalDataSourceImpl.clearPendingRegistrationEmail',
+        error: e,
+        stackTrace: s,
+        level: 1200,
+      );
+
+      throw const CacheException(
+        message: 'Something went wrong',
+        statusCode: 'UNKNOWN',
+      );
+    }
   }
 
   @override
   Future<void> clearSession() async {
-    await _storage.remove(_accessTokenKey);
-    await _storage.remove(_refreshTokenKey);
-    await _storage.remove(_userCognitoSubKey);
+    try {
+      await _storage.delete(key: _accessTokenKey);
+      await _storage.delete(key: _refreshTokenKey);
+      await _storage.delete(key: _userCognitoSubKey);
+    } on PlatformException catch (e, s) {
+      log(
+        'Error: Failed to clear session',
+        name: 'AuthLocalDataSourceImpl.clearSession',
+        error: e,
+        stackTrace: s,
+        level: 1200,
+      );
+
+      throw const CacheException(
+        message: 'Something went wrong',
+        statusCode: 'UNKNOWN',
+      );
+    } on Exception catch (e, s) {
+      log(
+        'Error: Failed to clear session',
+        name: 'AuthLocalDataSourceImpl.clearSession',
+        error: e,
+        stackTrace: s,
+        level: 1200,
+      );
+
+      throw const CacheException(
+        message: 'Something went wrong',
+        statusCode: 'UNKNOWN',
+      );
+    }
   }
 
   @override
   Future<String?> getAccessToken() async {
-    return _storage.getString(_accessTokenKey);
+    try {
+      return _storage.read(key: _accessTokenKey);
+    } on PlatformException catch (e, s) {
+      log(
+        'Error: Failed to get access token',
+        name: 'AuthLocalDataSourceImpl.getAccessToken',
+        error: e,
+        stackTrace: s,
+        level: 1200,
+      );
+
+      throw const CacheException(
+        message: 'Something went wrong',
+        statusCode: 'UNKNOWN',
+      );
+    } on Exception catch (e, s) {
+      log(
+        'Error: Failed to get access token',
+        name: 'AuthLocalDataSourceImpl.getAccessToken',
+        error: e,
+        stackTrace: s,
+        level: 1200,
+      );
+
+      throw const CacheException(
+        message: 'Something went wrong',
+        statusCode: 'UNKNOWN',
+      );
+    }
   }
 
   @override
   Future<String?> getPendingRegistrationEmail() async {
-    return _storage.getString(_pendingRegistrationEmailKey);
+    try {
+      return _storage.read(key: _pendingRegistrationEmailKey);
+    } on PlatformException catch (e, s) {
+      log(
+        'Error: Failed to get pending registration email',
+        name: 'AuthLocalDataSourceImpl.getPendingRegistrationEmail',
+        error: e,
+        stackTrace: s,
+        level: 1200,
+      );
+
+      throw const CacheException(
+        message: 'Something went wrong',
+        statusCode: 'UNKNOWN',
+      );
+    } on Exception catch (e, s) {
+      log(
+        'Error: Failed to get pending registration email',
+        name: 'AuthLocalDataSourceImpl.getPendingRegistrationEmail',
+        error: e,
+        stackTrace: s,
+        level: 1200,
+      );
+
+      throw const CacheException(
+        message: 'Something went wrong',
+        statusCode: 'UNKNOWN',
+      );
+    }
   }
 
   @override
   Future<String?> getRefreshToken() async {
-    return _storage.getString(_refreshTokenKey);
+    try {
+      return _storage.read(key: _refreshTokenKey);
+    } on PlatformException catch (e, s) {
+      log(
+        'Error: Failed to get refresh token',
+        name: 'AuthLocalDataSourceImpl.getRefreshToken',
+        error: e,
+        stackTrace: s,
+        level: 1200,
+      );
+
+      throw const CacheException(
+        message: 'Something went wrong',
+        statusCode: 'UNKNOWN',
+      );
+    } on Exception catch (e, s) {
+      log(
+        'Error: Failed to get refresh token',
+        name: 'AuthLocalDataSourceImpl.getRefreshToken',
+        error: e,
+        stackTrace: s,
+        level: 1200,
+      );
+
+      throw const CacheException(
+        message: 'Something went wrong',
+        statusCode: 'UNKNOWN',
+      );
+    }
   }
 
   @override
   Future<String?> getUserCognitoSub() async {
-    return _storage.getString(_userCognitoSubKey);
+    try {
+      return _storage.read(key: _userCognitoSubKey);
+    } on PlatformException catch (e, s) {
+      log(
+        'Error: Failed to get user cognito sub',
+        name: 'AuthLocalDataSourceImpl.getUserCognitoSub',
+        error: e,
+        stackTrace: s,
+        level: 1200,
+      );
+      throw const CacheException(
+        message: 'Something went wrong',
+        statusCode: 'UNKNOWN',
+      );
+    } on Exception catch (e, s) {
+      log(
+        'Error: Failed to get user cognito sub',
+        name: 'AuthLocalDataSourceImpl.getUserCognitoSub',
+        error: e,
+        stackTrace: s,
+        level: 1200,
+      );
+      throw const CacheException(
+        message: 'Something went wrong',
+        statusCode: 'UNKNOWN',
+      );
+    }
   }
 }

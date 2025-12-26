@@ -40,8 +40,7 @@ Future<void> _initAuth() async {
 }
 
 Future<void> _initStorage() async {
-  final prefs = await SharedPreferences.getInstance();
-  sl.registerLazySingleton(() => prefs);
+  sl.registerLazySingleton(FlutterSecureStorage.new);
 }
 
 Future<void> _initServices() async {

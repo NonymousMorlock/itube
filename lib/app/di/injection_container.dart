@@ -1,6 +1,7 @@
 import 'package:dio/browser.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
 import 'package:itube/app/providers/current_user_provider.dart';
@@ -20,6 +21,5 @@ import 'package:itube/src/auth/domain/usecases/logout.dart';
 import 'package:itube/src/auth/domain/usecases/register.dart';
 import 'package:itube/src/auth/domain/usecases/verify_email.dart';
 import 'package:itube/src/auth/presentation/adapters/auth_adapter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 part 'injection_container.main.dart';
