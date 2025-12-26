@@ -58,9 +58,6 @@ Future<void> _initServices() async {
     extra: {'withCredentials': true},
   );
   final dio = Dio(dioOptions);
-  if (kIsWeb || kIsWasm) {
-    dio.httpClientAdapter = BrowserHttpClientAdapter(withCredentials: true);
-  }
   dio.interceptors.addAll([
     LogInterceptor(requestBody: true, responseBody: true),
     RefreshTokenInterceptor(
