@@ -156,7 +156,10 @@ sealed class AppUtils {
     if (kIsWeb || kIsWasm) {
       html.window.location.reload();
     } else {
-      context.go(GoRouterState.of(context).matchedLocation);
+      context.go(
+        GoRouterState.of(context).matchedLocation,
+        extra: DateTime.now().millisecondsSinceEpoch,
+      );
     }
   }
 }
