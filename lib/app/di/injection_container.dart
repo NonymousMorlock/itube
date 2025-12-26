@@ -1,0 +1,25 @@
+import 'package:dio/browser.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get_it/get_it.dart';
+import 'package:itube/app/providers/current_user_provider.dart';
+import 'package:itube/core/constants/network_constants.dart';
+import 'package:itube/core/network/interceptors/refresh_token_interceptor.dart';
+import 'package:itube/core/network/interfaces/session_observer.dart';
+import 'package:itube/core/network/interfaces/token_provider.dart';
+import 'package:itube/src/auth/data/datasources/auth_local_data_source.dart';
+import 'package:itube/src/auth/data/datasources/auth_remote_data_source.dart';
+import 'package:itube/src/auth/data/providers/auth_token_provider_impl.dart';
+import 'package:itube/src/auth/data/repositories/auth_repository_impl.dart';
+import 'package:itube/src/auth/domain/repositories/auth_repository.dart';
+import 'package:itube/src/auth/domain/usecases/get_current_user.dart';
+import 'package:itube/src/auth/domain/usecases/get_pending_registration_email.dart';
+import 'package:itube/src/auth/domain/usecases/login.dart';
+import 'package:itube/src/auth/domain/usecases/logout.dart';
+import 'package:itube/src/auth/domain/usecases/register.dart';
+import 'package:itube/src/auth/domain/usecases/verify_email.dart';
+import 'package:itube/src/auth/presentation/adapters/auth_adapter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+part 'injection_container.main.dart';
