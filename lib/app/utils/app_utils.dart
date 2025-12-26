@@ -1,9 +1,12 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:go_router/go_router.dart';
 import 'package:itube/app/di/injection_container.dart';
 import 'package:itube/core/extensions/context_extensions.dart';
 import 'package:responsive_builder/responsive_builder.dart';
+import 'package:universal_html/html.dart' as html;
 
 enum SnackBarType {
   error(color: Colors.red, icon: Icons.error),
@@ -145,5 +148,15 @@ sealed class AppUtils {
     SchedulerBinding.instance.addPostFrameCallback((_) {
       callback?.call();
     });
+  }
+
+  static void handleRefresh({
+    required BuildContext context,
+  }) {
+    if (kIsWeb || kIsWasm) {
+      html.window.location.reload();
+    } else {
+      context.replace(GoRouterState.of(context).matchedLocation);
+    }
   }
 }
