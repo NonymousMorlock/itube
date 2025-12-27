@@ -36,8 +36,8 @@ class _ShellState extends State<Shell> {
   }
 
   @override
-  Future<void> dispose() async {
-    await _subscription?.cancel();
+  void dispose() {
+    unawaited(_subscription?.cancel());
     super.dispose();
   }
 
