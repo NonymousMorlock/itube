@@ -40,30 +40,6 @@ final router = GoRouter(
         return child;
       },
       routes: [
-        ShellRoute(
-          navigatorKey: _dashboardShellNavigatorKey,
-          builder: (_, state, child) {
-            return BlocProvider(
-              create: (_) => sl<AuthAdapter>(),
-              child: Shell(routerState: state, child: child),
-            );
-          },
-          routes: [
-            GoRoute(
-              path: RouteConstants.initialRoute,
-              builder: (_, _) {
-                if (CurrentUserProvider.instance.userExists) {
-                  return const HomePage();
-                } else {
-                  return BlocProvider(
-                    create: (_) => sl<AuthAdapter>(),
-                    child: const SplashPage(),
-                  );
-                }
-              },
-            ),
-          ],
-        ),
         GoRoute(
           path: SignupPage.path,
           builder: (_, _) {
@@ -92,6 +68,30 @@ final router = GoRouter(
               child: ConfirmSignupPage(email: email),
             );
           },
+        ),
+        ShellRoute(
+          navigatorKey: _dashboardShellNavigatorKey,
+          builder: (_, state, child) {
+            return BlocProvider(
+              create: (_) => sl<AuthAdapter>(),
+              child: Shell(routerState: state, child: child),
+            );
+          },
+          routes: [
+            GoRoute(
+              path: RouteConstants.initialRoute,
+              builder: (_, _) {
+                if (CurrentUserProvider.instance.userExists) {
+                  return const HomePage();
+                } else {
+                  return BlocProvider(
+                    create: (_) => sl<AuthAdapter>(),
+                    child: const SplashPage(),
+                  );
+                }
+              },
+            ),
+          ],
         ),
       ],
     ),
