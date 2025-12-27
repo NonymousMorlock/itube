@@ -7,7 +7,7 @@ import 'package:itube/core/extensions/dio_exception_extensions.dart';
 import 'package:itube/core/extensions/string_extensions.dart';
 import 'package:itube/core/typedefs.dart';
 
-abstract class NetworkUtils {
+sealed class NetworkUtils {
   static ServerException handleDioException(
     DioException e,
     StackTrace s, {
