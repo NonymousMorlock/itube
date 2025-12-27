@@ -74,21 +74,23 @@ final router = GoRouter(
           builder: (_, state, child) {
             return BlocProvider(
               create: (_) => sl<AuthAdapter>(),
-              child: Shell(routerState: state, child: child),
+              child: Shell(
+                routerState: state,
+                child: CurrentUserProvider.instance.userExists
+                    ? child
+                    : BlocProvider(
+                        key: UniqueKey(),
+                        create: (_) => sl<AuthAdapter>(),
+                        child: SplashPage(next: state.matchedLocation),
+                      ),
+              ),
             );
           },
           routes: [
             GoRoute(
               path: RouteConstants.initialRoute,
               builder: (_, _) {
-                if (CurrentUserProvider.instance.userExists) {
-                  return const HomePage();
-                } else {
-                  return BlocProvider(
-                    create: (_) => sl<AuthAdapter>(),
-                    child: const SplashPage(),
-                  );
-                }
+                return const HomePage();
               },
             ),
           ],

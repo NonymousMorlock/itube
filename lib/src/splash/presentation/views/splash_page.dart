@@ -3,14 +3,15 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:itube/app/routing/route_constants.dart';
 import 'package:itube/src/auth/auth.dart';
 import 'package:itube/src/auth/presentation/adapters/auth_adapter.dart';
 import 'package:itube/src/splash/presentation/animations/molten_prism.dart';
 import 'package:itube/src/splash/presentation/animations/prism_engine.dart';
 
 class SplashPage extends StatefulWidget {
-  const SplashPage({super.key});
+  const SplashPage({required this.next, super.key});
+
+  final String next;
 
   @override
   State<SplashPage> createState() => _SplashPageState();
@@ -48,7 +49,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
   void _navigateToNext() {
     final state = context.read<AuthAdapter>().state;
     if (state is CurrentUserLoaded) {
-      context.go(RouteConstants.initialRoute, extra: #authenticated);
+      context.go(widget.next, extra: DateTime.now().millisecondsSinceEpoch);
     } else if (state is AuthError) {
       context.go(LoginPage.path, extra: {'force': true});
     }
