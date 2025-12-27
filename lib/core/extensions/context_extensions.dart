@@ -8,4 +8,6 @@ extension ContextExtensions on BuildContext {
   ThemeData get theme => Theme.of(this);
 
   TextTheme get textTheme => theme.textTheme;
+
+  TargetPlatform get platform => theme.platform;
 }
