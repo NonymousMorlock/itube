@@ -11,6 +11,10 @@ final router = GoRouter(
     final goingToAuth = RouteConstants.authRoutes.any(
       (route) => state.matchedLocation.startsWith(route),
     );
+    final forceAuth =
+        goingToAuth &&
+        state.extra is Map &&
+        (state.extra! as Map)['force'] == true;
     final goingToPublicRoute = RouteConstants.publicRoutes.any(
       (route) => state.matchedLocation.startsWith(route),
     );
@@ -20,7 +24,7 @@ final router = GoRouter(
         (await sl<TokenProvider>().getUserCognitoSub() != null);
     if (!goingToAuth && !goingToPublicRoute && !isAuthenticated) {
       return LoginPage.path;
-    } else if (goingToAuth && isAuthenticated) {
+    } else if (goingToAuth && isAuthenticated && !forceAuth) {
       return RouteConstants.initialRoute;
     }
     return null;
