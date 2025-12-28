@@ -23,16 +23,16 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    // 1. Initialize the Engine
+    // Initialize the Engine
     _engine = PrismEngine(this);
 
-    // 2. Start the intro animation immediately
+    // Start the intro animation immediately
     _engine
       ..start()
-      // 3. Listen for the "Finished" signal to navigate away
+      // Listen for the "Finished" signal to navigate away
       ..addListener(_onEngineUpdate);
 
-    // 4. Start fetching data
+    // Start fetching data
     _bootstrapApp();
   }
 
