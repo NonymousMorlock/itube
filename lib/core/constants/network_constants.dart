@@ -9,5 +9,12 @@ sealed class NetworkConstants {
   static const verifyEmailEndpoint = '/auth/verify-email';
   static const getCurrentUserEndpoint = '/auth/me';
 
+  static const getPresignedVideoUrlEndpoint = '/upload/videos/upload-url';
+  static const getPresignedThumbnailUrlEndpoint =
+      '/upload/videos/thumbnail/upload-url';
+  static const uploadVideoMetadataEndpoint = '/upload/videos/metadata';
+  static const getAllVideosEndpoint = '/upload/videos';
+  static String getVideoByIdEndpoint(String id) => '/upload/videos/$id';
+
   static const serverFailureMessage = 'Something went wrong';
 }
