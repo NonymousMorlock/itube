@@ -1,0 +1,9 @@
+{
+  "id": "Test String",
+  "user_id": "Test String",
+  "title": "Test String",
+  "description": "Test String",
+  "video_s3_key": "Test String",
+  "visibility": "PUBLIC",
+  "processing_status": "IN_PROGRESS"
+}
