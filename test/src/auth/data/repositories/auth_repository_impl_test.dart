@@ -165,7 +165,7 @@ void main() {
         (_) async => (accessToken: tAccessToken, refreshToken: tRefreshToken),
       );
       when(() {
-        return localDataSource.cacheToken(
+        return tokenProvider.cacheToken(
           accessToken: any<String>(named: 'accessToken'),
           refreshToken: any<String>(named: 'refreshToken'),
         );
@@ -179,13 +179,13 @@ void main() {
         () => remoteDataSource.login(email: tEmail, password: tPassword),
       ).called(1);
       verify(
-        () => localDataSource.cacheToken(
+        () => tokenProvider.cacheToken(
           accessToken: tAccessToken,
           refreshToken: tRefreshToken,
         ),
       ).called(1);
       verifyNoMoreInteractions(remoteDataSource);
-      verifyNoMoreInteractions(localDataSource);
+      verifyNoMoreInteractions(tokenProvider);
     });
 
     test('should return [Left<Failure>] when call  '
@@ -205,12 +205,14 @@ void main() {
       final result = await repoImpl.login(email: tEmail, password: tPassword);
 
       expect(result, equals(const Left<Failure, void>(serverFailure)));
+
       verify(
         () => remoteDataSource.login(email: tEmail, password: tPassword),
       ).called(1);
 
       verifyNoMoreInteractions(remoteDataSource);
-      verifyZeroInteractions(localDataSource);
+
+      verifyZeroInteractions(tokenProvider);
     });
 
     test('should return [Left<Failure>] when call  '
@@ -224,7 +226,7 @@ void main() {
         (_) async => (accessToken: tAccessToken, refreshToken: tRefreshToken),
       );
       when(() {
-        return localDataSource.cacheToken(
+        return tokenProvider.cacheToken(
           accessToken: any<String>(named: 'accessToken'),
           refreshToken: any<String>(named: 'refreshToken'),
         );
@@ -242,13 +244,13 @@ void main() {
       ).called(1);
 
       verify(
-        () => localDataSource.cacheToken(
+        () => tokenProvider.cacheToken(
           accessToken: tAccessToken,
           refreshToken: tRefreshToken,
         ),
       ).called(1);
       verifyNoMoreInteractions(remoteDataSource);
-      verifyNoMoreInteractions(localDataSource);
+      verifyNoMoreInteractions(tokenProvider);
     });
   });
 
