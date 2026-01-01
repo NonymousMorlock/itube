@@ -31,6 +31,9 @@ dependencies:
   http: ^1.6.0
   image_picker: ^1.2.1
   intl: ^0.20.2
+  media_kit: ^1.2.6
+  media_kit_libs_video: ^1.0.7
+  media_kit_video: ^2.0.1
   provider: ^6.1.5+1
   responsive_builder: ^0.7.1
   shared_preferences: ^2.5.4
