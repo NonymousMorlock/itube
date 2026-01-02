@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:itube/app/di/injection_container.dart';
+import 'package:media_kit/media_kit.dart';
 
 class AppBlocObserver extends BlocObserver {
   const AppBlocObserver();
@@ -35,6 +36,7 @@ class AppBlocObserver extends BlocObserver {
 
 Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
   WidgetsFlutterBinding.ensureInitialized();
+  MediaKit.ensureInitialized();
   FlutterError.onError = (details) {
     if ((kIsWeb || kIsWasm) && kDebugMode) {
       debugPrint(details.exceptionAsString());
