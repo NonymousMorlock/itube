@@ -8,9 +8,11 @@ class AdaptiveProgressIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CircularProgressIndicator.adaptive(
-      strokeWidth: 2,
-      valueColor: AlwaysStoppedAnimation(color ?? context.theme.primaryColor),
+    return Center(
+      child: CircularProgressIndicator.adaptive(
+        strokeWidth: 2,
+        valueColor: AlwaysStoppedAnimation(color ?? context.theme.primaryColor),
+      ),
     );
   }
 }
