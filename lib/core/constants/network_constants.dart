@@ -10,10 +10,13 @@ sealed class NetworkConstants {
   static const getCurrentUserEndpoint = '/auth/me';
 
   static const getPresignedVideoUrlEndpoint = '/upload/videos/upload-url';
-  static const getPresignedThumbnailUrlEndpoint =
-      '/upload/videos/thumbnail/upload-url';
+
+  static String getPresignedThumbnailUrlEndpoint(String associatedVideoId) =>
+      '/upload/videos/thumbnail/upload-url'
+      '?associated_video_id=$associatedVideoId';
   static const uploadVideoMetadataEndpoint = '/upload/videos/metadata';
   static const getAllVideosEndpoint = '/upload/videos';
+
   static String getVideoByIdEndpoint(String id) => '/upload/videos/$id';
 
   static const serverFailureMessage = 'Something went wrong';
