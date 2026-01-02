@@ -7,6 +7,7 @@ final _dashboardShellNavigatorKey = GlobalKey<NavigatorState>();
 final router = GoRouter(
   navigatorKey: _rootNavigatorKey,
   initialLocation: RouteConstants.initialRoute,
+  extraCodec: const RouterExtraCodec(),
   redirect: (context, state) async {
     final goingToAuth = RouteConstants.authRoutes.any(
       (route) => state.matchedLocation.startsWith(route),
