@@ -83,7 +83,7 @@ final router = GoRouter(
                         key: UniqueKey(),
                         create: (_) => sl<AuthAdapter>(),
                         child: SplashPage(
-                          next: state.matchedLocation,
+                          next: state.uri.toString(),
                           nextExtra: state.extra,
                         ),
                       ),
