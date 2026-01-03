@@ -82,7 +82,10 @@ final router = GoRouter(
                     : BlocProvider(
                         key: UniqueKey(),
                         create: (_) => sl<AuthAdapter>(),
-                        child: SplashPage(next: state.matchedLocation),
+                        child: SplashPage(
+                          next: state.matchedLocation,
+                          nextExtra: state.extra,
+                        ),
                       ),
               ),
             );

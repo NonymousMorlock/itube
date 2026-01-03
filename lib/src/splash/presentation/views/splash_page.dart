@@ -9,9 +9,10 @@ import 'package:itube/src/splash/presentation/animations/molten_prism.dart';
 import 'package:itube/src/splash/presentation/animations/prism_engine.dart';
 
 class SplashPage extends StatefulWidget {
-  const SplashPage({required this.next, super.key});
+  const SplashPage({required this.next, this.nextExtra, super.key});
 
   final String next;
+  final Object? nextExtra;
 
   @override
   State<SplashPage> createState() => _SplashPageState();
@@ -49,7 +50,10 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
   void _navigateToNext() {
     final state = context.read<AuthAdapter>().state;
     if (state is CurrentUserLoaded) {
-      context.go(widget.next, extra: DateTime.now().millisecondsSinceEpoch);
+      context.go(
+        widget.next,
+        extra: widget.nextExtra ?? DateTime.now().millisecondsSinceEpoch,
+      );
     } else if (state is AuthError) {
       context.go(LoginPage.path, extra: {'force': true});
     }
