@@ -6,6 +6,31 @@ Future<void> init() async {
   await _initStorage();
   await _initServices();
   await _initAuth();
+  await _initVideo();
+}
+
+Future<void> _initVideo() async {
+  sl
+    ..registerFactory(
+      () => VideoAdapter(
+        getAllVideos: sl(),
+        getVideoById: sl(),
+        uploadVideo: sl(),
+      ),
+    )
+    ..registerLazySingleton(() => GetAllVideos(sl()))
+    ..registerLazySingleton(() => GetVideoById(sl()))
+    ..registerLazySingleton(() => UploadVideo(sl()))
+    ..registerLazySingleton<VideoRepo>(() => VideoRepoImpl(sl()))
+    ..registerLazySingleton<VideoRemoteDataSource>(
+      () => VideoRemoteDataSourceImpl(
+        dio: sl(),
+        s3Dio: Dio()
+          ..interceptors.add(
+            LogInterceptor(requestBody: true, responseBody: true),
+          ),
+      ),
+    );
 }
 
 Future<void> _initAuth() async {
