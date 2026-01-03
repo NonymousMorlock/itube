@@ -1,7 +1,10 @@
 sealed class NetworkConstants {
   const NetworkConstants();
 
-  static const baseUrl = 'http://localhost:8000/api/v1';
+  static const baseUrl = String.fromEnvironment(
+    'API_URL',
+    defaultValue: 'http://localhost:8000/api/v1',
+  );
   static const refreshTokenEndpoint = '/auth/refresh-token';
   static const registerEndpoint = '/auth/signup';
   static const loginEndpoint = '/auth/login';
