@@ -84,12 +84,12 @@ Future<void> _initServices() async {
   );
   final dio = Dio(dioOptions);
   dio.interceptors.addAll([
-    LogInterceptor(requestBody: true, responseBody: true),
     RefreshTokenInterceptor(
       dio: dio,
       tokenProvider: sl(),
       sessionObserver: sl(),
     ),
+    LogInterceptor(requestBody: true, responseBody: true),
   ]);
   sl.registerLazySingleton(() => dio);
 }
