@@ -8,11 +8,18 @@ import 'package:itube/app/routing/codec.dart';
 import 'package:itube/app/routing/route_constants.dart';
 import 'package:itube/app/view/shell.dart';
 import 'package:itube/core/network/interfaces/token_provider.dart';
+import 'package:itube/core/presentation/views/error_page.dart';
 import 'package:itube/src/auth/presentation/adapters/auth_adapter.dart';
 import 'package:itube/src/auth/presentation/views/confirm_signup_page.dart';
 import 'package:itube/src/auth/presentation/views/login_page.dart';
 import 'package:itube/src/auth/presentation/views/signup_page.dart';
 import 'package:itube/src/dashboard/presentation/views/home_page.dart';
 import 'package:itube/src/splash/presentation/views/splash_page.dart';
+import 'package:itube/src/video/domain/entities/video.dart';
+import 'package:itube/src/video/presentation/adapters/video_adapter.dart';
+import 'package:itube/src/video/presentation/state/video_upload_state_controller.dart';
+import 'package:itube/src/video/presentation/views/upload_video_page.dart';
+import 'package:itube/src/video/presentation/views/watch_page.dart';
+import 'package:provider/provider.dart';
 
 part 'router.main.dart';
