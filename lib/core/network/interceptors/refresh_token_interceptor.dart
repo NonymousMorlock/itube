@@ -50,6 +50,9 @@ class RefreshTokenInterceptor extends Interceptor {
           extra: isWeb ? {'withCredentials': true} : {},
         ),
       );
+      refreshDio.interceptors.add(
+        LogInterceptor(requestBody: true, responseBody: true),
+      );
       if (!isWeb) {
         final refreshToken = await _tokenProvider.getRefreshToken();
         final userSub = await _tokenProvider.getUserCognitoSub();
