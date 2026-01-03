@@ -46,6 +46,13 @@ class Video extends Equatable {
     return '$baseUrl/$thumbnailKey';
   }
 
+  String get dashManifestUrl {
+    const baseManifestUrl = String.fromEnvironment(
+      'CLOUDFRONT_VIDEOS_BASE_URL',
+    );
+    return '$baseManifestUrl/$videoS3Key/manifest.mpd';
+  }
+
   @override
   List<Object?> get props => [
     id,
