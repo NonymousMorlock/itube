@@ -89,7 +89,12 @@ Future<void> _initServices() async {
       tokenProvider: sl(),
       sessionObserver: sl(),
     ),
-    LogInterceptor(requestBody: true, responseBody: true),
+    LogInterceptor(
+      requestBody: true,
+      responseBody: true,
+      requestHeader: false,
+      responseHeader: false,
+    ),
   ]);
   sl.registerLazySingleton(() => dio);
 }
