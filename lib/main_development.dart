@@ -6,7 +6,12 @@ import 'package:itube/bootstrap.dart';
 Future<void> main() async {
   await bootstrap(
     () => DevicePreview(
-      enabled: !kIsWasm && !kIsWeb,
+      enabled:
+          !kIsWasm &&
+          !kIsWeb &&
+          defaultTargetPlatform != TargetPlatform.fuchsia &&
+          defaultTargetPlatform != TargetPlatform.iOS &&
+          defaultTargetPlatform != TargetPlatform.android,
       builder: (_) => const App(),
     ),
   );
