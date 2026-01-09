@@ -24,7 +24,10 @@ final router = GoRouter(
         (await sl<TokenProvider>().getAccessToken()) != null ||
         (await sl<TokenProvider>().getUserCognitoSub() != null);
     if (!goingToAuth && !goingToPublicRoute && !isAuthenticated) {
-      return LoginPage.path;
+      return Uri(
+        path: LoginPage.path,
+        queryParameters: {'next': state.uri.toString()},
+      ).toString();
     } else if (goingToAuth && isAuthenticated && !forceAuth) {
       return RouteConstants.initialRoute;
     }
@@ -52,10 +55,11 @@ final router = GoRouter(
         ),
         GoRoute(
           path: LoginPage.path,
-          builder: (_, _) {
+          builder: (_, state) {
+            final next = state.uri.queryParameters['next'];
             return BlocProvider(
               create: (_) => sl<AuthAdapter>(),
-              child: const LoginPage(),
+              child: LoginPage(next: next),
             );
           },
         ),

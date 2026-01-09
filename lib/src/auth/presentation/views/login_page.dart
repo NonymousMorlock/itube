@@ -14,9 +14,11 @@ import 'package:itube/src/auth/presentation/adapters/auth_adapter.dart';
 import 'package:itube/src/auth/presentation/views/signup_page.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  const LoginPage({this.next, super.key});
 
   static const path = '/login';
+
+  final String? next;
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -69,7 +71,7 @@ class _LoginPageState extends State<LoginPage> {
             context,
             message: 'Logged in successfully.',
           );
-          context.go(RouteConstants.initialRoute);
+          context.go(widget.next ?? RouteConstants.initialRoute);
         }
       },
       child: AuthLayout(
