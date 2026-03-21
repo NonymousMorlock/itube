@@ -39,11 +39,18 @@ class Video extends Equatable {
   final ProcessingStatus processingStatus;
 
   String get thumbnailUrl {
-    const baseUrl = 'https://itube-video-thumbnails.s3.eu-west-1.amazonaws.com';
+    const baseUrl = String.fromEnvironment('THUMBNAIL_BASE_URL');
     final thumbnailKey = videoS3Key
         .replaceAll('.mp4', '.jpg')
         .replaceAll('videos/', 'thumbnails/');
     return '$baseUrl/$thumbnailKey';
+  }
+
+  String get dashManifestUrl {
+    const baseManifestUrl = String.fromEnvironment(
+      'CLOUDFRONT_VIDEOS_BASE_URL',
+    );
+    return '$baseManifestUrl/$videoS3Key/manifest.mpd';
   }
 
   @override

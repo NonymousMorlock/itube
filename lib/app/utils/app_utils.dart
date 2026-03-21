@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:itube/app/di/injection_container.dart';
 import 'package:itube/core/extensions/context_extensions.dart';
 import 'package:responsive_builder/responsive_builder.dart';
-import 'package:universal_html/html.dart' as html;
+import 'package:universal_web/web.dart' as web;
 
 enum SnackBarType {
   error(color: Colors.red, icon: Icons.error),
@@ -154,7 +154,7 @@ sealed class AppUtils {
     required BuildContext context,
   }) {
     if (kIsWeb || kIsWasm) {
-      html.window.location.reload();
+      web.window.location.reload();
     } else {
       context.go(
         GoRouterState.of(context).matchedLocation,
