@@ -38,7 +38,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         NetworkConstants.getCurrentUserEndpoint,
       );
 
-      if (![200, 201].contains(response.statusCode)) {
+      if (![200].contains(response.statusCode)) {
         throw NetworkUtils.handleDioResponseError(
           response,
           repositoryName: 'AuthRemoteDataSrcImpl',
