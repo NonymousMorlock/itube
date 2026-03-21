@@ -19,5 +19,12 @@ import 'package:itube/src/auth/domain/usecases/logout.dart';
 import 'package:itube/src/auth/domain/usecases/register.dart';
 import 'package:itube/src/auth/domain/usecases/verify_email.dart';
 import 'package:itube/src/auth/presentation/adapters/auth_adapter.dart';
+import 'package:itube/src/video/data/datasources/video_remote_data_source.dart';
+import 'package:itube/src/video/data/repositories/video_repository_impl.dart';
+import 'package:itube/src/video/domain/repositories/video_repository.dart';
+import 'package:itube/src/video/domain/usecases/get_all_videos.dart';
+import 'package:itube/src/video/domain/usecases/get_video_by_id.dart';
+import 'package:itube/src/video/domain/usecases/upload_video.dart';
+import 'package:itube/src/video/presentation/adapters/video_adapter.dart';
 
 part 'injection_container.main.dart';

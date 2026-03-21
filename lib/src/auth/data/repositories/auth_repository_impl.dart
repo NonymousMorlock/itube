@@ -54,7 +54,7 @@ class AuthRepoImpl implements AuthRepo {
         email: email,
         password: password,
       );
-      await _localDataSource.cacheToken(
+      await _tokenProvider.cacheToken(
         accessToken: accessToken,
         refreshToken: refreshToken,
       );

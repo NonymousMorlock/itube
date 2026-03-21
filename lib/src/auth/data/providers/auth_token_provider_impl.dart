@@ -12,6 +12,8 @@ class AuthTokenProviderImpl implements TokenProvider {
 
   @override
   Future<void> cacheToken({String? accessToken, String? refreshToken}) async {
+    _inMemoryAccessToken = accessToken ?? _inMemoryAccessToken;
+    _inMemoryRefreshToken = refreshToken ?? _inMemoryRefreshToken;
     return _localDataSource.cacheToken(
       accessToken: accessToken,
       refreshToken: refreshToken,

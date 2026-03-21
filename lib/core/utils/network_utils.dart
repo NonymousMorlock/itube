@@ -131,8 +131,6 @@ sealed class NetworkUtils {
     String? accessToken;
     String? refreshToken;
 
-    log('Cookies: $setCookies', name: 'NetworkUtils.extractTokensFromCookies');
-
     for (final cookie in setCookies) {
       final parts = cookie.split(';');
       final nameValue = parts.first;
@@ -147,16 +145,6 @@ sealed class NetworkUtils {
 
       if (name == 'refresh_token') refreshToken = value;
     }
-
-    log(
-      'Access Token: $accessToken',
-      name: 'NetworkUtils.extractTokensFromCookies',
-    );
-
-    log(
-      'Refresh Token: $refreshToken',
-      name: 'NetworkUtils.extractTokensFromCookies',
-    );
 
     return (accessToken: accessToken, refreshToken: refreshToken);
   }

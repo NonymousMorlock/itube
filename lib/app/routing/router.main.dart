@@ -7,6 +7,7 @@ final _dashboardShellNavigatorKey = GlobalKey<NavigatorState>();
 final router = GoRouter(
   navigatorKey: _rootNavigatorKey,
   initialLocation: RouteConstants.initialRoute,
+  extraCodec: const RouterExtraCodec(),
   redirect: (context, state) async {
     final goingToAuth = RouteConstants.authRoutes.any(
       (route) => state.matchedLocation.startsWith(route),
@@ -23,7 +24,10 @@ final router = GoRouter(
         (await sl<TokenProvider>().getAccessToken()) != null ||
         (await sl<TokenProvider>().getUserCognitoSub() != null);
     if (!goingToAuth && !goingToPublicRoute && !isAuthenticated) {
-      return LoginPage.path;
+      return Uri(
+        path: LoginPage.path,
+        queryParameters: {'next': state.uri.toString()},
+      ).toString();
     } else if (goingToAuth && isAuthenticated && !forceAuth) {
       return RouteConstants.initialRoute;
     }
@@ -51,10 +55,11 @@ final router = GoRouter(
         ),
         GoRoute(
           path: LoginPage.path,
-          builder: (_, _) {
+          builder: (_, state) {
+            final next = state.uri.queryParameters['next'];
             return BlocProvider(
               create: (_) => sl<AuthAdapter>(),
-              child: const LoginPage(),
+              child: LoginPage(next: next),
             );
           },
         ),
@@ -72,6 +77,22 @@ final router = GoRouter(
         ShellRoute(
           navigatorKey: _dashboardShellNavigatorKey,
           builder: (_, state, child) {
+            if (state.matchedLocation == WatchPage.path &&
+                state.uri.queryParameters[WatchPage.videoIdQueryParamName] ==
+                    null) {
+              debugPrint(
+                '[router.shell] Video ID is null. '
+                'Complete URL: ${state.uri}',
+              );
+              return const ErrorPage(
+                title: 'Lost in the static?',
+                message:
+                    "We couldn't find the video you're looking "
+                    'for because the link is incomplete. '
+                    'Try heading back home to discover something new!',
+                canRefresh: false,
+              );
+            }
             return BlocProvider(
               create: (_) => sl<AuthAdapter>(),
               child: Shell(
@@ -81,7 +102,10 @@ final router = GoRouter(
                     : BlocProvider(
                         key: UniqueKey(),
                         create: (_) => sl<AuthAdapter>(),
-                        child: SplashPage(next: state.matchedLocation),
+                        child: SplashPage(
+                          next: state.uri.toString(),
+                          nextExtra: state.extra,
+                        ),
                       ),
               ),
             );
@@ -90,7 +114,55 @@ final router = GoRouter(
             GoRoute(
               path: RouteConstants.initialRoute,
               builder: (_, _) {
-                return const HomePage();
+                return BlocProvider(
+                  create: (_) => sl<VideoAdapter>(),
+                  child: const HomePage(),
+                );
+              },
+            ),
+            GoRoute(
+              path: UploadVideoPage.path,
+              builder: (_, _) {
+                return BlocProvider(
+                  create: (_) => sl<VideoAdapter>(),
+                  child: ChangeNotifierProvider(
+                    create: (_) => VideoUploadStateController(),
+                    child: const UploadVideoPage(),
+                  ),
+                );
+              },
+            ),
+            GoRoute(
+              path: WatchPage.path,
+              builder: (_, state) {
+                final videoId =
+                    state.uri.queryParameters[WatchPage.videoIdQueryParamName];
+                if (videoId == null) {
+                  debugPrint(
+                    '[router.watch] Video ID is null. '
+                    'Complete URL: ${state.uri}',
+                  );
+                  return const ErrorPage(
+                    title: 'Lost in the static?',
+                    message:
+                        "We couldn't find the video you're looking "
+                        'for because the link is incomplete. '
+                        'Try heading back home to discover something new!',
+                    canRefresh: false,
+                  );
+                }
+                if (state.extra is! Video) {
+                  debugPrint(
+                    '[router.watch] Extra is not a Video: ${state.extra}',
+                  );
+                }
+                return BlocProvider(
+                  create: (_) => sl<VideoAdapter>(),
+                  child: WatchPage(
+                    video: state.extra is Video ? state.extra! as Video : null,
+                    videoId: videoId,
+                  ),
+                );
               },
             ),
           ],

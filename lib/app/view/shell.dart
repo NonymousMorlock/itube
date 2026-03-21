@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:itube/app/di/injection_container.dart';
+import 'package:itube/app/providers/current_user_provider.dart';
 import 'package:itube/core/network/interfaces/session_observer.dart';
 import 'package:itube/src/auth/auth.dart';
 import 'package:itube/src/auth/presentation/adapters/auth_adapter.dart';
+import 'package:itube/src/dashboard/presentation/components/dashboard.dart';
 
 class Shell extends StatefulWidget {
   const Shell({
@@ -49,7 +51,9 @@ class _ShellState extends State<Shell> {
           context.go(LoginPage.path);
         }
       },
-      child: widget.child,
+      child: CurrentUserProvider.instance.userExists
+          ? Dashboard(routerState: widget.routerState, child: widget.child)
+          : widget.child,
     );
   }
 }
