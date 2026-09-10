@@ -13,7 +13,7 @@ dependencies:
   dartz: ^0.10.1
   desktop_drop: ^0.8.4
   device_preview: ^3.0.0
-  dio: ^5.11.0
+  dio: ^5.11.1
   equatable: ^2.1.0
   flutter:
     sdk: flutter
